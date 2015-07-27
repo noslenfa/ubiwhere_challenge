@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h3>List Users</h3>
+<div class="jumbotron">
+    <div class="panel panel-info">
+        <table class="table table-striped table-hover">
+            <thead>
+            <tr>
+                <th>User</th>
+                <th>Email</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for users in result %}
+            <tr>
+                <td class="vert-align"><a href='/users/{{users.id}}'>{{ users.user }}</a></td>
+                <td class="vert-align">{{ users.email }}</td>
+                <td class="last-td"><a href="/delete_user/{{users.id}}"><button class="btn btn-danger">Delete</button></a></td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% if id %}
+<div class="jumbotron">
+<form action="/users/{{id}}" method="post" >
+    {% load bootstrap %}
+    {% csrf_token %}
+    <h4>{{ form|bootstrap }}</h4>
+    </br>
+    <button type="submit" class="btn btn-primary">Search Music</button>
+</form>
+    </div>
+</br>
+{% endif %}
+
+{% if musics_list %}
+<h3>Musics Searched</h3>
+   <div class="jumbotron">
+       <div class="panel panel-info">
+           <table class="table table-striped table-hover">
+               <thead>
+               <tr>
+                    <th>Title</th>
+                    <th>Artist</th>
+                    <th>Album</th>
+                    <th></th>
+                </tr>
+               </thead>
+               <tbody>
+               {% for musics in musics_list %}
+               <tr>
+                    <td class="vert-align">{{ musics.title }}</td>
+                    <td class="vert-align">{{ musics.artist }}</td>
+                    <td class="vert-align">{{ musics.album }}</td>
+                    <td class="last-td"><a href='/favorites_add/{{id}}/{{musics.title}}'><button type="button" class="btn btn-success">Add to Favorites</button></a><br/></td>
+               </tr>
+               {% endfor %}
+               </tbody>
+           </table>
+       </div>
+   </div>
+</br>
+{% endif %}
+
+{% if favorites %}
+<h3>Favorites Musics</h3>
+<div class="jumbotron">
+    <div class="panel panel-info">
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Artist</th>
+                    <th>Album</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for musics in favorites %}
+                <tr>
+                    <td class="vert-align">{{ musics.title }}</td>
+                    <td class="vert-align">{{ musics.artist }}</td>
+                    <td class="vert-align">{{ musics.album }}</td>
+                    <td class="last-td"><a href='/favorites_delete/{{id}}/{{musics.title}}'><button class="btn btn-danger">Delete from Favorites</button></a><br/></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}

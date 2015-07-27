@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h3>Add User</h3>
+<div class="jumbotron">
+    <form action="/add_user/" method="post" >
+    {% load bootstrap %}
+        {% csrf_token %}
+        <h4>{{ form|bootstrap }}</h4>
+        </br>
+        <button type="submit" class="btn btn-success">Add User</button>
+    </form>
+</div>
+{% endblock %}

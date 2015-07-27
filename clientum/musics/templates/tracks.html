@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block content %}
+<h3>External Musics</h3>
+<div class="jumbotron">
+    <div class="panel panel-info">
+        <table class="table table-striped table-hover">
+            <thead>
+            <tr>
+                <th>Title</th>
+                <th>Artist</th>
+                <th>Album</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for musics in atracks %}
+            <tr>
+                <td class="vert-align">{{ musics.title }}</td>
+                <td class="vert-align">{{ musics.artist }}</td>
+                <td class="vert-align">{{ musics.album }}</td>
+                <td class="last-td"><a href='/add_tracks/{{musics.title}}/{{musics.artist}}/{{musics.album}}'><button type="button" class="btn btn-success">Add to Musics</button></a> <br /> </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

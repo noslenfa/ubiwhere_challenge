@@ -1,0 +1,22 @@
+.navbar-default {
+    background-color: #5492CC;
+    }
+
+.navbar-default .navbar-nav > li > a {
+   color: #FFFFFF;
+   font-size: 20px;
+   }
+
+th {
+    background-color: #D9EDF7;
+    color: #000000;
+    font-size: 18px;
+    }
+
+.last-td {
+    text-align: right;
+    }
+
+.table tbody>tr>td.vert-align{
+    vertical-align: middle;
+}
