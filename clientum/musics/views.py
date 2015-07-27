@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from .forms import UsersForm, MusicsForm, MusicSearchForm
 from django.conf import settings
+from django.contrib import messages
 
 import requests
 
@@ -18,7 +19,7 @@ def list_users(request, id):
             form = MusicSearchForm(request.POST)
 
             if form.is_valid():
-                rm = requests.get("https://frozen-castle-7671.herokuapp.com/musics/"+request.POST['musics'])
+                rm = requests.get(settings.SITE_URL +'musics/'+request.POST['musics'])
                 resultm = rm.json()
                 return render(request, 'list_users.html', {'result' : result, 'form' : form, 'id' : id, 'musics_list' : resultm, 'favorites' : favorites_list(request, id)})
         else:
@@ -50,6 +51,7 @@ def add_user(request):
             email = form.cleaned_data['email']
             payload = {'user': user, 'email': email}
             requests.post("https://frozen-castle-7671.herokuapp.com/users/", data=payload)
+            messages.success(request, 'Added user to database!')
             return HttpResponseRedirect('/users/')
     # if a GET (or any other method) we'll create a blank form
     else:
@@ -69,7 +71,8 @@ def add_music(request):
             artist = form.cleaned_data['artist']
             album = form.cleaned_data['album']
             payload = {'title': title, 'artist': artist, 'album' : album}
-            requests.post("https://frozen-castle-7671.herokuapp.com/musics/", data=payload)
+            requests.post(settings.SITE_URL +'musics/', data=payload)
+            messages.success(request, 'Added music to database!')
             return HttpResponseRedirect('/musics/')
     # if a GET (or any other method) we'll create a blank form
     else:
@@ -80,11 +83,13 @@ def add_music(request):
 
 def delete_music(request, id):
     requests.delete(settings.SITE_URL +'musics_delete/' + id)
+    messages.warning(request, 'Music deleted from database!')
     return HttpResponseRedirect('/musics/')
 
 
 def delete_user(request, id):
     requests.delete(settings.SITE_URL +'users_delete/' + id)
+    messages.warning(request, 'User deleted from database!')
     return HttpResponseRedirect('/users/')
 
 
@@ -96,12 +101,14 @@ def favorites_list(request, id):
 
 def favorites_add(request, id, title):
     payload = {'title' : title}
-    requests.post('https:/'+ settings.SITE_URL +'favorites/' + id, data=payload)
+    requests.post(settings.SITE_URL +'favorites/' + id, data=payload)
+    messages.success(request, 'Added favorite music to user!')
     return HttpResponseRedirect('/users/' + id)
 
 
 def favorites_delete(request, id, title):
-    requests.delete('https:/'+ settings.SITE_URL +'favorites_del/' + id + '/' + title)
+    requests.delete(settings.SITE_URL +'favorites_del/' + id + '/' + title)
+    messages.warning(request, 'Deleted favorite music from user!')
     return HttpResponseRedirect('/users/' + id)
 
 
@@ -112,10 +119,12 @@ def tracks(request):
     alltracks = []
     for i in resulttracks:
         alltracks.append({"title": i['track_title'], "album": i['album_title'], "artist": i['artist_name']})
+    messages.success(request, 'External tracks list imported!')
     return render(request, 'tracks.html', {"atracks": alltracks})
 
 
 def add_tracks(request, title, artist, album):
     payload = {'title': title, 'artist': artist, 'album' : album}
     requests.post(settings.SITE_URL +'musics/', data=payload)
+    messages.success(request, 'Track added successfully to database!')
     return HttpResponseRedirect('/tracks/')
